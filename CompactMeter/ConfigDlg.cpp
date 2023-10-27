@@ -72,6 +72,12 @@ INT_PTR CALLBACK ConfigDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
         }
         SendMessage(hTrafficMaxCombo, CB_SETCURSEL, iSelected, 0);
 
+        // フォントサイズ
+        SetDlgItemInt(hDlg, IDC_FONT_SIZE, g_pIniConfig->mFontSize, FALSE);
+
+        // フォント太字
+        CheckDlgButton(hDlg, IDC_FONT_BOLD, g_pIniConfig->mFontBold ? BST_CHECKED : BST_UNCHECKED);
+
         // ESCキーでウィンドウを閉じる
         CheckDlgButton(hDlg, IDC_CLOSE_WINDOW_BY_ESC_CHECK, g_pIniConfig->mCloseByESC ? BST_CHECKED : BST_UNCHECKED);
 
@@ -172,6 +178,32 @@ INT_PTR CALLBACK ConfigDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             if (HIWORD(wParam) == BN_CLICKED) {
                 g_pIniConfig->mCloseByESC = IsDlgButtonChecked(hDlg, IDC_CLOSE_WINDOW_BY_ESC_CHECK) == BST_CHECKED;
                 g_pIniConfig->Save();
+            }
+            return static_cast<INT_PTR>(TRUE);
+
+        case IDC_FONT_SIZE:
+            if (HIWORD(wParam) == EN_CHANGE) {
+                int fontSize = GetDlgItemInt(hDlg, IDC_FONT_SIZE, nullptr, FALSE);
+                if (fontSize < 1) {
+                    fontSize = 1;
+                    SetDlgItemInt(hDlg, IDC_FONT_SIZE, fontSize, FALSE);
+                }
+
+                g_pIniConfig->mFontSize = fontSize;
+                g_pIniConfig->Save();
+
+                // UIに反映するために変更通知
+                ::PostMessage(g_hWnd, WM_CONFIG_DLG_UPDATED, 0, 0);
+            }
+            return static_cast<INT_PTR>(TRUE);
+
+        case IDC_FONT_BOLD:
+            if (HIWORD(wParam) == BN_CLICKED) {
+                g_pIniConfig->mFontBold = IsDlgButtonChecked(hDlg, IDC_FONT_BOLD) == BST_CHECKED;
+                g_pIniConfig->Save();
+
+                // UIに反映するために変更通知
+                ::PostMessage(g_hWnd, WM_CONFIG_DLG_UPDATED, 0, 0);
             }
             return static_cast<INT_PTR>(TRUE);
 

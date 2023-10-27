@@ -37,6 +37,10 @@ public:
     // 各メーターの設定値(および順序)
     std::vector<MeterConfig> mMeterConfigs;
 
+    // フォント
+    int mFontSize = 14;
+    bool mFontBold = false;
+
 private:
     const wchar_t* szAppName = L"CompactMeter";
 

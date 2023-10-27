@@ -38,6 +38,10 @@ void IniConfig::Load()
     mFitToDesktop = ReadBoolEntry(L"FitToDesktop", true);
     mDrawBorder = ReadBoolEntry(L"DrawBorder", true);
 
+
+    mFontSize = ReadIntEntry(L"FontSize", 14);
+    mFontBold = ReadBoolEntry(L"FontBold", false);
+
     mColumnCount = ReadIntEntry(L"ColumnCount", 2);
     NormalizeColumnCount();
 
@@ -147,6 +151,9 @@ void IniConfig::Save()
 
     NormalizeColumnCount();
     WriteIntEntry(L"ColumnCount", mColumnCount);
+
+    WriteIntEntry(L"FontSize", mFontSize);
+    WriteBoolEntry(L"FontBold", mFontBold);
 
     // mMeterConfigsをシリアライズして保存する
     std::stringstream ss;

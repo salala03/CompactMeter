@@ -28,6 +28,9 @@
 #define IDC_UNREGISTER_STARTUP_BUTTON   1011
 #define IDC_CHOOSE_COLOR_BUTTON         1012
 #define IDC_CLOSE_WINDOW_BY_ESC_CHECK   1013
+#define IDC_FONT_SIZE                   1014
+#define IDC_CHECK1                      1015
+#define IDC_FONT_BOLD                   1015
 #define ID_POPUPMENU_ALWAYSONTOP        32775
 #define ID_POPUPMENU_DEBUGMODE          32776
 #define ID_POPUPMENU_DRAW_BORDER        32778
@@ -43,7 +46,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32785
-#define _APS_NEXT_CONTROL_VALUE         1014
+#define _APS_NEXT_CONTROL_VALUE         1016
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif
