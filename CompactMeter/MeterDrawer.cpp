@@ -9,6 +9,20 @@ extern int g_dpiY;
 extern float g_dpiScale;
 extern IniConfig* g_pIniConfig;
 
+static MeterGuide cpuGuides[] = {
+    { 100.0, D2D1::ColorF(0xFF4040), L"" },
+    {  90.0, D2D1::ColorF(0xFF4040), L"" },
+    {  80.0, D2D1::ColorF(0xFF8040), L"" },
+    {  70.0, D2D1::ColorF(0xC0C040), L"" },
+    {  60.0, D2D1::ColorF(0xC0C0C0), L"" },
+    {  50.0, D2D1::ColorF(0xC0C0C0), L"" },
+    {  40.0, D2D1::ColorF(0xC0C0C0), L"" },
+    {  30.0, D2D1::ColorF(0xC0C0C0), L"" },
+    {  20.0, D2D1::ColorF(0xC0C0C0), L"" },
+    {  10.0, D2D1::ColorF(0xC0C0C0), L"" },
+    {   0.0, D2D1::ColorF(0xC0C0C0), L"" },
+};
+
 void MeterDrawer::Init(HWND hWnd, int width, int height)
 {
     const HRESULT hr = CreateDeviceIndependentResources();
@@ -265,6 +279,7 @@ void MeterDrawer::DrawMeters(HWND hWnd, CWorker* pWorker, float screenWidth, flo
     MeterInfo memoryMeter;
     MeterInfo netMeterIn;
     MeterInfo netMeterOut;
+    MeterInfo gpuMeter;
     std::vector<MeterInfo> driveMeters;
 
     // CPU+Memory
@@ -276,6 +291,8 @@ void MeterDrawer::DrawMeters(HWND hWnd, CWorker* pWorker, float screenWidth, flo
     // Network
     MakeNetworkMeterInfo(pWorker, netMeterOut, netMeterIn);
 
+    // GPU
+    MakeGpuMeterInfo(pWorker, gpuMeter);
 
     //--------------------------------------------------
     // 描画順序設定に合わせて詰める
@@ -302,6 +319,9 @@ void MeterDrawer::DrawMeters(HWND hWnd, CWorker* pWorker, float screenWidth, flo
         case METER_ID_NETWORK:
             addWithConfig(meters, &netMeterOut, &mc);
             addWithConfig(meters, &netMeterIn, &mc);
+            break;
+        case METER_ID_GPU:
+            addWithConfig(meters, &gpuMeter, &mc);
             break;
         default:
             if (METER_ID_DRIVE_A <= mc.id && mc.id <= METER_ID_DRIVE_Z) {
@@ -485,20 +505,6 @@ bool MeterDrawer::MoveToNextBox(float &x, float & y, float size, float left, flo
 
 void MeterDrawer::MakeCpuMemoryMeterInfo(int &nCore, CWorker * pWorker, MeterInfo &cpuMeter, MeterInfo &coreMeters, MeterInfo &memoryMeter)
 {
-    static MeterGuide cpuGuides[] = {
-        { 100.0, D2D1::ColorF(0xFF4040), L"" },
-        {  90.0, D2D1::ColorF(0xFF4040), L"" },
-        {  80.0, D2D1::ColorF(0xFF8040), L"" },
-        {  70.0, D2D1::ColorF(0xC0C040), L"" },
-        {  60.0, D2D1::ColorF(0xC0C0C0), L"" },
-        {  50.0, D2D1::ColorF(0xC0C0C0), L"" },
-        {  40.0, D2D1::ColorF(0xC0C0C0), L"" },
-        {  30.0, D2D1::ColorF(0xC0C0C0), L"" },
-        {  20.0, D2D1::ColorF(0xC0C0C0), L"" },
-        {  10.0, D2D1::ColorF(0xC0C0C0), L"" },
-        {   0.0, D2D1::ColorF(0xC0C0C0), L"" },
-    };
-
     CpuUsage cpuUsage;
     nCore = pWorker->GetCpuUsage(&cpuUsage);
 
@@ -640,6 +646,18 @@ void MeterDrawer::MakeNetworkMeterInfo(CWorker * pWorker, MeterInfo &netMeterOut
         mi.label.Format(L"▼ %.1f KB/s", inKb);
         mi.guides = m_netGuides;
     }
+}
+
+void MeterDrawer::MakeGpuMeterInfo(CWorker* pWorker, MeterInfo& gpuMeter)
+{
+    MeterInfo& mi = gpuMeter;
+    GpuUsage gpuUsage;
+
+    pWorker->GetGpuUsage(&gpuUsage);
+
+    mi.percent = gpuUsage.usage * 100;
+    mi.label.Format(L"GPU (%.0f%%)", mi.percent);
+    mi.guides = cpuGuides;
 }
 
 void MeterDrawer::AppendFormatOfKb(long kb, MeterInfo & mi)

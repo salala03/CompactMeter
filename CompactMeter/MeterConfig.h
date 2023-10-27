@@ -12,6 +12,8 @@ enum MeterId {
     METER_ID_DRIVES_ALL_DEPRECATED = 400,
     METER_ID_DRIVE_A = 401,
     METER_ID_DRIVE_Z = 426,
+    METER_ID_GPU = 500,
+    METER_ID_GPU_MEMORY = 501,
 };
 
 constexpr UINT defaultBackgroundColor = 0x0A0A0A;
@@ -46,6 +48,8 @@ struct MeterConfig {
             return L"Network";
         case METER_ID_DRIVES_ALL_DEPRECATED:
             return L"Drives(Deprecated)";
+        case METER_ID_GPU:
+            return L"GPU";
         case METER_ID_UNKNOWN:
         default:
             if (METER_ID_DRIVE_A <= id && id <= METER_ID_DRIVE_Z) {

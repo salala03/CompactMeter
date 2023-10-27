@@ -72,6 +72,8 @@ void IniConfig::Load()
         defaultMeterConfigs.push_back(MeterConfig(METER_ID_MEMORY));
         defaultMeterConfigs.push_back(MeterConfig(METER_ID_CORES));
         defaultMeterConfigs.push_back(MeterConfig(METER_ID_NETWORK));
+        defaultMeterConfigs.push_back(MeterConfig(METER_ID_GPU));
+        defaultMeterConfigs.push_back(MeterConfig(METER_ID_GPU_MEMORY));
 
         // ドライブはID別にする
         DWORD drives = ::GetLogicalDrives();

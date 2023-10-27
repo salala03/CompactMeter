@@ -133,6 +133,7 @@ private:
     static bool MoveToNextBox(float &x, float & y, float size, float left, float right, float bottom);
 
     void MakeNetworkMeterInfo(CWorker * pWorker, MeterInfo &netMeterOut, MeterInfo &netMeterIn);
+    void MakeGpuMeterInfo(CWorker* pWorker, MeterInfo& gpuMeter);
     static void MakeCpuMemoryMeterInfo(int &nCore, CWorker * pWorker, MeterInfo &cpuMeter, MeterInfo &coreMeters, MeterInfo &memoryInfo);
     void MakeDriveMeterInfo(CWorker * pWorker, std::vector<MeterInfo> &driveMeters);
 

@@ -46,6 +46,9 @@ int MyUtil::GetMeterCount()
         case METER_ID_NETWORK:
             meterCount += 2;
             break;
+        case METER_ID_GPU:
+            meterCount++;
+            break;
         default:
             if (METER_ID_DRIVE_A <= mc.id && mc.id <= METER_ID_DRIVE_Z) {
 

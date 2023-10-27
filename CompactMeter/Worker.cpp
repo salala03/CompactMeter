@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "IniConfig.h"
 #include "MeterDrawer.h"
+#include "gpuusage.h"
 
 extern bool        g_dragging;
 extern IniConfig*  g_pIniConfig;
@@ -82,6 +83,9 @@ DWORD WINAPI CWorker::ExecThread()
 
             // Drive 使用量取得
             CollectDriveUsage(nDrives, hDriveReadQuery, hDriveReadCounter, fntValue, hDriveWriteQuery, hDriveWriteCounter);
+
+            // GPU使用率取得
+            CollectGpuUsage();
 
             m_stopWatch.Stop();
             criticalSection.Unlock();
@@ -363,6 +367,18 @@ void CWorker::CollectTraffic()
 
 }
 
+void CWorker::CollectGpuUsage()
+{
+    GpuUsage gpu;
+    gpu.usage = GetGPUUsage();
+
+    gpuUsages.push_back(gpu);
+
+    while (gpuUsages.size() > static_cast<size_t>(g_pIniConfig->mFps)) {
+        gpuUsages.erase(gpuUsages.begin());
+    }
+}
+
 void CWorker::Terminate()
 {
     Logger::d(L"Worker terminate");
@@ -429,4 +445,44 @@ void CWorker::GetDriveUsages(DriveUsage * out)
             }
         }
     }
+}
+
+int CWorker::GetGpuUsage(GpuUsage* out)
+{
+    const int n = static_cast<int>(gpuUsages.size());
+    if (n <= 0) {
+        return 0;
+    }
+
+    // 初期化
+    out->usage = 0;
+
+    // 平均値を計算する
+    for (auto it = gpuUsages.begin(); it != gpuUsages.end(); ++it) {
+        out->usage += it->usage;
+    }
+    
+    out->usage /= n;
+
+    return 0;
+}
+
+int CWorker::GetGpuMemory(GpuMemory* out)
+{
+    const int n = static_cast<int>(gpuMemorys.size());
+    if (n <= 0) {
+        return 0;
+    }
+
+    // 初期化
+    out->usage = 0;
+
+    // 平均値を計算する
+    for (auto it = gpuMemorys.begin(); it != gpuMemorys.end(); ++it) {
+        out->usage += it->usage;
+    }
+
+    out->usage /= n;
+
+    return 0;
 }

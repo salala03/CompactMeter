@@ -21,6 +21,15 @@ struct DriveUsage {
     std::vector<long> writeUsages;
 };
 
+struct GpuUsage {
+    double usage;
+};
+
+struct GpuMemory {
+    double usage;
+};
+
+
 class CWorker
 {
 public:
@@ -32,8 +41,12 @@ public:
     // CPU使用率
     std::list<CpuUsage> cpuUsages;
 
-    // CPU使用率
+    // Drive使用率
     std::list<DriveUsage> driveUsages;
+
+    std::list<GpuUsage> gpuUsages;
+
+    std::list<GpuMemory> gpuMemorys;
 
     StopWatch m_stopWatch;
 
@@ -49,6 +62,10 @@ public:
     int GetCpuUsage(CpuUsage* out);
     void GetDriveUsages(DriveUsage* out);
 
+    int GetGpuUsage(GpuUsage* out);
+
+    int GetGpuMemory(GpuMemory* out);
+
 private:
     HWND hWnd = nullptr;
 
@@ -63,5 +80,6 @@ private:
     void CollectDriveUsage(int nDrives, std::vector<PDH_HQUERY> &hDriveReadQuery, std::vector<PDH_HCOUNTER> &hDriveReadCounter,
         PDH_FMT_COUNTERVALUE &fntValue, std::vector<PDH_HQUERY> &hDriveWriteQuery, std::vector<PDH_HCOUNTER> &hDriveWriteCounter);
     void CollectTraffic();
+    void CollectGpuUsage();
 };
 
