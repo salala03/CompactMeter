@@ -379,7 +379,7 @@ void MeterDrawer::DrawMeters(HWND hWnd, CWorker* pWorker, float screenWidth, flo
         // TextFormat
         IDWriteTextFormat* pTextFormat;
         m_stopWatch2.Start();
-        if (CreateMyTextFormat(12.0f / g_dpiScale, &pTextFormat)) {
+        if (CreateMyTextFormat(12.0f / g_dpiScale, false, &pTextFormat)) {
             m_stopWatch2.Stop();
 
             auto layout_rect = D2D1::RectF(4, y+4, screenWidth, screenHeight);
@@ -738,7 +738,8 @@ void MeterDrawer::DrawMeter(D2D1_RECT_F& rect, const MeterInfo& mi) const
     // TextFormat
     {
         IDWriteTextFormat* pTextFormat;
-        if (CreateMyTextFormat(11 * scale, &pTextFormat)) {
+        //if (CreateMyTextFormat(11 * scale, &pTextFormat)) {
+        if (CreateMyTextFormat(g_pIniConfig->mFontSize * scale, g_pIniConfig->mFontBold, &pTextFormat)) {
 
             m_pRenderTarget->DrawText(str, static_cast<UINT32>(wcslen(str)), pTextFormat,
                                       rect, m_pBrush, D2D1_DRAW_TEXT_OPTIONS_NO_SNAP,
@@ -812,7 +813,7 @@ void MeterDrawer::DrawMeter(D2D1_RECT_F& rect, const MeterInfo& mi) const
             m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 
             IDWriteTextFormat* pTextFormat;
-            if (CreateMyTextFormat(8 * scale, &pTextFormat)) {
+            if (CreateMyTextFormat(8 * scale, false, &pTextFormat)) {
 
                 IDWriteTextLayout* pTextLayout = nullptr;
                 if (SUCCEEDED(m_pDWFactory->CreateTextLayout(text, static_cast<UINT32>(wcslen(text)), pTextFormat, rect1.right - rect1.left, rect1.bottom - rect1.top, &pTextLayout))) {
@@ -852,7 +853,7 @@ void MeterDrawer::DrawLineByAngle(D2D1_POINT_2F& center, float angle, float leng
         strokeWidth);
 }
 
-bool MeterDrawer::CreateMyTextFormat(float fontSize, IDWriteTextFormat** ppTextFormat) const
+bool MeterDrawer::CreateMyTextFormat(float fontSize, bool fontBold, IDWriteTextFormat** ppTextFormat) const
 {
     const HRESULT hr = m_pDWFactory->CreateTextFormat(
         L"メイリオ"

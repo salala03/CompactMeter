@@ -139,7 +139,7 @@ private:
     static void AppendFormatOfKb(long kb, MeterInfo & mi);
     void DrawMeter(D2D1_RECT_F& rect, const MeterInfo& mi) const;
     void DrawLineByAngle(D2D1_POINT_2F& center, float angle, float length1, float length2, float strokeWidth) const;
-    bool CreateMyTextFormat(float fontSize, IDWriteTextFormat** ppTextFormat) const;
+    bool CreateMyTextFormat(float fontSize, bool fontBold, IDWriteTextFormat** ppTextFormat) const;
 
     static inline float KbToPercent(float kb, const DWORD &maxTrafficBytes)
     {
