@@ -858,7 +858,7 @@ bool MeterDrawer::CreateMyTextFormat(float fontSize, bool fontBold, IDWriteTextF
     const HRESULT hr = m_pDWFactory->CreateTextFormat(
         L"メイリオ"
         , nullptr
-        , DWRITE_FONT_WEIGHT_NORMAL
+        , fontBold ? DWRITE_FONT_WEIGHT_NORMAL : DWRITE_FONT_WEIGHT_BOLD
         , DWRITE_FONT_STYLE_NORMAL
         , DWRITE_FONT_STRETCH_NORMAL
         , fontSize
